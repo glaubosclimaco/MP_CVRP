@@ -2,6 +2,7 @@
 #
 # # Solve a vehicle routing problem with gurobi
 #
+from logging import captureWarnings
 import sys
 import math
 import random
@@ -57,8 +58,17 @@ model = gp.Model()
 
 # number of vehicles K
 K = 3
+
+# generate random demand array
+demand = [random.randint(1, 10) for i in range(N)]
+
+# sum of all demands
+sumDemand = sum(demand)
+print('sum demand = ', sumDemand)
+
 # capacity of each vehicle
-CAP = 10
+CAP = math.floor(sumDemand/(0.7*K))
+print('capacity = ', CAP)
 
 # create variables x[i,j,k], where k is the vehicle index
 # x[i,j,k] is 1 if the edge (i,j) is in the kth route
@@ -90,8 +100,8 @@ constraint5 = model.addConstrs(gp.quicksum(x[i, m, k] for i in range(
     0, N)) - gp.quicksum(x[m, j, k] for j in range(0, N)) == 0 for m in range(1, N) for k in range(K))
 
 # capacity constraint
-# constraint6 = model.addConstrs(gp.quicksum(q[i][n]*x[i, j, k]for i in range(
-#     0, N) for j in range(0, N)) <= CAP for k in range(K) for n in range(3))
+constraint6 = model.addConstrs(gp.quicksum(demand[i]*x[i, j, k]for i in range(
+    0, N) for j in range(0, N)) <= CAP for k in range(K) for n in range(3))
 
 
 model.update()
