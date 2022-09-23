@@ -202,7 +202,7 @@ model.update()
 
 # penalidades de acordo com o período. Quando mais tarde, maior a penalidade
 penalidades = []
-# coeficiente de penalidade de acordo com o numero de pontos
+# coeficiente de penalidade de acordo com o numero de periodos
 M = N
 for p in range(P):
     penalidades.append(p*M)
